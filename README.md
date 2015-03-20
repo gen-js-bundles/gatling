@@ -1,10 +1,10 @@
-# Java
+# Gatling
 
-## New Java project
+## New Gatling project
 
 * In an empty folder, execute this command :
 ```
-genjs start java
+genjs start gatling
 ```
 
 ## Prerequites
@@ -14,3 +14,4 @@ genjs start java
 ```
 npm install -g genjs
 ```
+
