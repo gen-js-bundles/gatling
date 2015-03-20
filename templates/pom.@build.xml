@@ -1,0 +1,65 @@
+<% if(build.tool == 'maven') { %><?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId><%= maven.groupId %></groupId>
+	<artifactId><%= maven.artifactId %></artifactId>
+	<version><%= project.version %></version>
+	<packaging><%= maven.packaging %></packaging>
+
+	<name><%= project.name %></name>
+	<description><%= project.description %></description>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<java.version><%= version.java %></java.version>
+	</properties>
+
+<% if(all.config.tags.build.dependencies != null) { %>
+	<dependencies>
+        <%
+          var dependencies = all.config.tags.build.dependencies;
+          each(dependencies, function(dependency) {
+        %>
+		<dependency>
+			<groupId><%= dependency.groupId %></groupId>
+			<artifactId><%= dependency.artifactId %></artifactId>
+			<% if(dependency.version != null) { %>
+			<version><%= dependency.version %></version>
+			<% } %>
+			<% if(dependency.scope != null) { %>
+			<scope><%= dependency.scope %></scope>
+			<% } %>
+		</dependency>
+        <%
+          })
+        %>
+    </dependencies>
+<% } %>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.2</version>
+				<configuration>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>2.7</version>
+				<configuration>
+					<encoding>${project.build.sourceEncoding}</encoding>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>
+
+<% } %>

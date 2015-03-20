@@ -1,0 +1,63 @@
+<% if(build.tool == 'gradle') { %>
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+
+jar {
+    baseName = '<%= project.name %>'
+    version = '<%= project.version %>.0-SNAPSHOT'
+}
+sourceCompatibility = <%= version.java %>
+targetCompatibility = <%= version.java %>
+
+repositories {
+    mavenCentral()
+}
+
+
+dependencies {
+<%
+  var dependencies = all.config.tags.build.dependencies;
+  each(dependencies, function(dependency) {
+    var dependencyDeclaration =
+      dependency.groupId
+      + ":"
+      + dependency.artifactId;
+    if(dependency.version != null) {
+      dependencyDeclaration += 
+        ":"
+        + dependency.version;
+    }
+    if(dependency.scope == null || dependency.scope == 'compile') {
+%>
+    compile("<%=dependencyDeclaration%>")
+<%
+    }
+    if(dependency.scope == 'test') {
+%>
+    testCompile("<%=dependencyDeclaration%>")
+<%
+    }
+  })
+%>
+}
+
+eclipse {
+    classpath {
+         containers.remove('org.eclipse.jdt.launching.JRE_CONTAINER')
+         containers 'org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-<%= version.java %>'
+    }
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '1.12'
+}
+
+<% } %>
